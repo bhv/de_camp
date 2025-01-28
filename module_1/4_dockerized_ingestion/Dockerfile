@@ -9,5 +9,5 @@ ADD requirements.txt .
 
 RUN pip install -r requirements.txt
 
-ENTRYPOINT [ "bash" ]
-#ENTRYPOINT [ "python", "data_ingest.py" ]
+# ENTRYPOINT [ "bash" ]
+ENTRYPOINT [ "python", "data_ingest.py" ]
