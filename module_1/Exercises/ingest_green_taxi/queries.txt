@@ -1,0 +1,68 @@
+Question 3. Trip Segmentation Count
+
+"
+WITH t1
+     AS (SELECT trip_distance,
+                CASE
+                  WHEN trip_distance <= 1 THEN 'upto 1'
+                  WHEN trip_distance > 1
+                       AND trip_distance <= 3 THEN 'bet 1 and 3'
+                  WHEN trip_distance > 3
+                       AND trip_distance <= 7 THEN 'bet 3 and 7'
+                  WHEN trip_distance > 7
+                       AND trip_distance <= 10 THEN 'bet 7 and 10'
+                  ELSE 'over 10'
+                END AS dist_cat
+         FROM   green_taxi_data
+         WHERE  lpep_pickup_datetime >= '2019-10-01'
+                AND lpep_dropoff_datetime < '2019-11-01')
+SELECT dist_cat,
+       Count(*) AS num_trips
+FROM   t1
+GROUP  BY 1; 
+"
+
+Question 4. Longest trip 
+
+WITH t1 AS
+(
+         SELECT   lpep_pickup_datetime::date AS date_,
+                  lpep_pickup_datetime,
+                  trip_distance
+         FROM     green_taxi_data
+         ORDER BY trip_distance DESC)
+SELECT date_
+FROM   t1 limit 1;
+
+
+Question 5. Three biggest pickup zones
+
+SELECT b."zone",
+       SUM(a.total_amount) total_amt
+FROM   green_taxi_data AS a
+       inner join taxi_zone_lookup AS b
+               ON a."pulocationid" = b."locationid"
+WHERE  a.lpep_pickup_datetime :: DATE = '2019-10-18'
+GROUP  BY 1
+ORDER  BY total_amt DESC; 
+
+
+Question 6. Largest tip
+
+WITH t1 AS
+(
+           SELECT     c."Zone" AS drop_zone,
+                      Max(tip_amount)
+           FROM       green_taxi_data  AS a
+           INNER JOIN taxi_zone_lookup AS b
+           ON         a."PULocationID" = b."LocationID"
+           INNER JOIN taxi_zone_lookup AS c
+           ON         a."DOLocationID" = c."LocationID"
+           WHERE      a.lpep_pickup_datetime>='2019-10-01'
+           AND        a.lpep_pickup_datetime<='2019-10-31'
+           AND        b."Zone" LIKE 'East Harlem North'
+           GROUP BY   1
+           ORDER BY   2 DESC)
+SELECT drop_zone
+FROM   t1 limit 1;
+
