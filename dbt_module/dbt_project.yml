@@ -39,5 +39,5 @@ models:
   taxi_rides_ny:
 
 vars:
-  is_test_run: true
+  is_test_run: false
 
