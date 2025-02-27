@@ -1,0 +1,11 @@
+version: 2
+
+sources:
+  - name: staging
+    database: de-camp-449119
+    schema: ny_taxi
+
+    tables:
+      - name: yellow_trip_data_external
+      - name: green_trip_data_external
+      
